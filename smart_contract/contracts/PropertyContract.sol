@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-contract PropertyManagment {
+contract PropertyContract {
     uint256 public propertyCount = 0;
 
     struct PropertyStruct {
@@ -18,8 +18,6 @@ contract PropertyManagment {
         uint256 timestamp;
         address tenant;
         uint256 paymentDate;
-        string longitude;
-        string latitude;
     }
 
     mapping(uint256 => PropertyStruct) public properties;
@@ -36,9 +34,7 @@ contract PropertyManagment {
         string memory _description,
         string memory _propertyAddress,
         int256 _price,
-        string memory _propertyOwnershipHash,
-        string memory _longitude,
-        string memory _latitude
+        string memory _propertyOwnershipHash
     ) public {
         PropertyStruct memory property = PropertyStruct(
             propertyCount,
@@ -52,9 +48,7 @@ contract PropertyManagment {
             true,
             block.timestamp,
             address(0),
-            0,
-            _longitude,
-            _latitude
+            0
         );
         properties[propertyCount] = property;
         propertyCount++;
