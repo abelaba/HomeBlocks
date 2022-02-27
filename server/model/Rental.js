@@ -1,19 +1,9 @@
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// * RENTAL SCHEMA
-
-// userID
-// Name
-// Description
-// Address
-// Image
-// Price
-
 const rentalSchema = new mongoose.Schema({
-    userId:{
-        type:String,
+    userId: {
+        type: String,
         required: true
     },
     propertyIdOnBlockChain: {
@@ -28,33 +18,56 @@ const rentalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    name:{
+    name: {
         type: String,
         required: true,
     },
-    description:{
+    description: {
         type: String,
         required: true,
     },
-    address:{
+    address: {
         type: String,
         required: true,
         max: 255,
         min: 6,
     },
-    rentalImage:{
-        type: String,
-        required:true
+    coordinates: {
+        type: {
+            lat: Number,
+            lng: Number,
+        },
+        required: true,
     },
-    ownerShip:{
+    rentalImage: {
         type: String,
-        required:true
+        required: true
     },
-    available:{
+    ownerShip: {
+        type: String,
+        required: true
+    },
+    available: {
         type: Boolean,
-        default:true
+        default: true
     },
-    price:{
+    propertyType: {
+        type: String,
+        required: true,
+    },
+    numBedrooms: {
+        type: Number,
+        required: true,
+    },
+    numBathrooms: {
+        type: Number,
+        required: true,
+    },
+    totalArea: {
+        type: Number,
+        required: true,
+    },
+    price: {
         type: Number,
         required: true
     },
@@ -64,11 +77,8 @@ const rentalSchema = new mongoose.Schema({
     },
     tenant: {
         type: Schema.Types.ObjectId,
-        ref : "User"
-
+        ref: "User"
     }
 });
-
-
 
 module.exports = mongoose.model('Rental', rentalSchema);
