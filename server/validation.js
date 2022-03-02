@@ -35,6 +35,11 @@ const rentalValidation = data =>{
         description: Joi.string().required(),
         address: Joi.string().required(),
         price: Joi.number().required(),
+        coordinates: Joi.required(),
+        numBedrooms: Joi.number().required(),
+        numBathrooms: Joi.number().required(),
+        totalArea: Joi.number().required(),
+        propertyType: Joi.string().required(),
     });
     return schema.validate(data);
 
