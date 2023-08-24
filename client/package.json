@@ -1,5 +1,5 @@
 {
-  "name": "wave-app",
+  "name": "HomeBlocks",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
@@ -29,7 +29,7 @@
     "postcss": "^8.3.11",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
-    "react-icons": "^4.3.1",
+    "react-icons": "^4.10.1",
     "react-jwt": "^1.1.4",
     "react-router-dom": "^6.2.1"
   },
