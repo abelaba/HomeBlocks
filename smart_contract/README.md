@@ -34,7 +34,9 @@ To set up the smart contract locally, follow these steps:
 
 1. **Set up blochain enviroment**: Either run `npx hardhat node` or install [Ganache](https://trufflesuite.com/ganache/) and run the application.
 
-2. **Compile and Deploy**: Compile and deploy the smart contract onto the Ethereum blockchain Run `npx hardhat -network <network name> scripts/deploy.js`.
+2. **Compile and Deploy**: Compile and deploy the smart contract onto the Ethereum blockchain Run `npx hardhat run --network <your-network> scripts/deploy.js`.
+
+3. **After deploying the smart contract, you must add the PropertyContract address to client/constants.js file**: Add it to the `propertyContractAddress` variable.
 
 3. **Interact with the Smart Contract**: Use Ethereum wallets or development tools to interact with the deployed smart contract. Perform actions like creating agreements and making payments.
 
