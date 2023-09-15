@@ -37,13 +37,17 @@ To set up the server locally, follow these steps:
 ```
 DB_CONNECT = <MongoDB connection string>
 SECRET_KEY = <Secret key for JWT>
+PORT = <Port number for the server>
+TEST_DB = <MongoDB connection string for testing>
 ```
 
 ## Usage
 
 1. **Start the Server**: Run `nodemon app.js` to start the server.
 
-2. **Interact with the API**: Use API clients like Postman or Insomnia to interact with the server endpoints for user authentication, property management, and booking requests.
+2. **Interact with the API**: Use API clients like Postman to interact with the server endpoints for user authentication, property management, and booking requests.
+
+3. **Run tests**: After adding the TEST_DB field in the .env file run `npm run test`.
 
 ## Technologies
 
