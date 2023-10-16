@@ -43,7 +43,7 @@ TEST_DB = <MongoDB connection string for testing>
 
 ## Usage
 
-1. **Start the Server**: Run `nodemon app.js` to start the server.
+1. **Start the Server**: Run `nodemon server.js` to start the server.
 
 2. **Interact with the API**: Use API clients like Postman to interact with the server endpoints for user authentication, property management, and booking requests.
 

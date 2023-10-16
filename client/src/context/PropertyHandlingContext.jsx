@@ -114,7 +114,7 @@ export const PropertyHandlingProvider = ({ children }) => {
     formData.append("propertyOwnershipHash", propertyOwnershipHash);
 
     try {
-      const response = await axios.post(`${URL}/add`, formData, config);
+      const response = await axios.post(`${rentingURL}/add`, formData, config);
       navigateTo("/manageProperties");
     } catch (error) {
       console.log(error.response);
@@ -168,20 +168,19 @@ export const PropertyHandlingProvider = ({ children }) => {
         const property = await propertyContract.properties(i);
         if (property.owner.toLowerCase() == connectedAccount.toLowerCase()) {
           const response = await axios.get(`${rentingURL}/getImage/${i}`);
-          const timestamp = parseInt(property.timestamp._hex) * 1000;
           const structuredProperty = {
             owner: property.owner,
-            userId: property.userId,
-            name: property.name,
-            description: property.description,
-            address: response.data[0].address,
-            price: parseInt(property.price._hex),
             propertyCount: parseInt(property.propertyCount._hex),
-            propertyOwnershipHash: property.propertyOwnershipHash,
-            available: response.data[0].available,
-            timestamp: new Date(timestamp).toLocaleString(),
-            rentalImage: response.data[0].rentalImage,
             tenant: property.tenant,
+            userId: response.data[0].userId,
+            name: response.data[0].name,
+            propertyOwnershipHash: response.data[0].propertyOwnershipHash,
+            description: response.data[0].description,
+            address: response.data[0].address,
+            price: response.data[0].price,
+            available: response.data[0].available,
+            timestamp: new Date(response.data[0].date).toLocaleString(),
+            rentalImage: response.data[0].rentalImage,
             numBedrooms: response.data[0].numBedrooms,
             numBathrooms: response.data[0].numBathrooms,
             totalArea: response.data[0].totalArea,
