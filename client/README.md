@@ -38,6 +38,16 @@ To set up the client interface locally, follow these steps:
 
 3. **Install Dependencies**: Run `npm install` to install the required dependencies.
 
+4. **Configure Environment Variables**: Create a `.env` file and configure the necessary environment variables as given below.
+
+```
+VITE_PORT = <Port number for the client>
+VITE_SECRET = <Secret key for JWT>
+VITE_BASE_URL = <Base URL for the server>
+VITE_MAP_BOX_API = <Mapbox API token>
+VITE_PROPERTY_CONTRACT_ADDRESS = <Property contract address>
+```
+
 ## Usage
 
 1. **Start the Development Server**: Run `npm run dev` to start the development server. This will open the application in your default web browser.

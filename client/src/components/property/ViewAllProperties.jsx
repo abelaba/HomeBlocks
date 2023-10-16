@@ -1,10 +1,9 @@
-import { PropertyHandlingContext } from "../context/PropertyHandlingContext";
+import { PropertyHandlingContext } from "../../context/PropertyHandlingContext";
 import { useState, useEffect, useContext } from "react";
 import PropertyCard from "./PropertyCard";
-import AddPropertyCard from "./AddPropertyCard";
 
-export default function ManageProperties() {
-  const { viewMyProperties } = useContext(PropertyHandlingContext);
+export default function ViewAllProperties() {
+  const { viewAllProperties } = useContext(PropertyHandlingContext);
   const [properties, setProperties] = useState([]);
   const [searchFilters, setSearchFilters] = useState({
     maxPrice: Infinity,
@@ -17,7 +16,7 @@ export default function ManageProperties() {
   const [filterCollapsed, setFilterCollapsed] = useState(false);
 
   useEffect(async () => {
-    const allProperties = await viewMyProperties();
+    const allProperties = await viewAllProperties();
     setProperties(allProperties);
   }, []);
 
@@ -40,9 +39,9 @@ export default function ManageProperties() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-6 flex flex-col justify-items-center items-center">
       {!filterCollapsed && (
-        <div className="grid grid-flow-cols grid-cols-7 mb-4">
+        <div className="grid grid-flow-cols grid-cols-7 mb-4 space-x-4">
           <div className="grid grid-flow-rows">
             <label htmlFor="maxPrice" className="text-white">
               Max Price
@@ -62,7 +61,7 @@ export default function ManageProperties() {
             />
           </div>
           <div className="grid grid-flow-rows">
-            <label htmlFor="minBedrooms" className="text-white">
+            <label htmlFor="minBedrooms" className="text-white mb-1">
               Min Bedrooms
             </label>
             <input
@@ -80,7 +79,7 @@ export default function ManageProperties() {
             />
           </div>
           <div className="grid grid-flow-rows">
-            <label htmlFor="minBathrooms" className="text-white">
+            <label htmlFor="minBathrooms" className="text-white mb-1">
               Min Bathrooms
             </label>
             <input
@@ -98,7 +97,7 @@ export default function ManageProperties() {
             />
           </div>
           <div className="grid grid-flow-rows">
-            <label htmlFor="propertyType" className="text-white">
+            <label htmlFor="propertyType" className="text-white mb-1">
               Property Type
             </label>
             <input
@@ -116,7 +115,7 @@ export default function ManageProperties() {
             />
           </div>
           <div className="grid grid-flow-rows">
-            <label htmlFor="address" className="text-white">
+            <label htmlFor="address" className="text-white mb-1">
               Address
             </label>
             <input
@@ -131,7 +130,7 @@ export default function ManageProperties() {
             />
           </div>
           <div className="grid grid-flow-rows">
-            <label htmlFor="minTotalArea" className="text-white">
+            <label htmlFor="minTotalArea" className="text-white mb-1">
               Min Total Area
             </label>
             <input
@@ -158,8 +157,7 @@ export default function ManageProperties() {
           </div>
         </div>
       )}
-      <AddPropertyCard />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {filteredProperties.length === 0 ? (
           <div className="col-span-full m-20 p-20 text-white font-bold">
             <p>No properties match the filters</p>

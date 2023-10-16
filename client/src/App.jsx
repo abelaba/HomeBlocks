@@ -2,22 +2,22 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-import { Navbar, Welcome, Footer, Services, Transactions } from "./components";
+import { Navbar, Welcome, Footer, Services } from "./components";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
-import ViewAllProperties from "./components/ViewAllProperties";
-import ManageProperties from "./components/ManageProperties";
-import PropertyDetail from "./components/PropertyDetail";
-import AddProperty from "./components/AddProperty";
-import Chats from "./components/Chats";
-import Chat from "./components/Chat";
+import ViewAllProperties from "./components/property/ViewAllProperties";
+import ManageProperties from "./components/property/ManageProperties";
+import PropertyDetail from "./components/property/PropertyDetail";
+import AddProperty from "./components/property/AddProperty";
+import Chats from "./components/chat/Chats";
+import Chat from "./components/chat/Chat";
 import MapBox from "./components/MapBox";
 
 const App = () => {
   return (
 
-    <div className="min-h-screen">
-      <div className="gradient-bg-welcome">
+    <div className="gradient-bg-welcome">
+      <div className="min-h-screen">
         <Navbar />
         <Routes>
           {/* <Switch> */}
@@ -34,8 +34,6 @@ const App = () => {
           {/* </Switch> */}
         </Routes>
       </div>
-
-      {/* <Transactions /> */}
       <Footer />
     </div>
   )

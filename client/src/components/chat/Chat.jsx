@@ -1,13 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { AuthenticationContext } from "../context/AuthenticationContext";
-import { TransactionContext } from "../context/TransactionContext";
-import { ChatContext } from "../context/ChatContext";
-import { PropertyHandlingContext } from "../context/PropertyHandlingContext";
+import { AuthenticationContext } from "../../context/AuthenticationContext";
+import { ChatContext } from "../../context/ChatContext";
+import { PropertyHandlingContext } from "../../context/PropertyHandlingContext";
 import "./css/chats.css";
 import { decodeToken } from "react-jwt";
-import { TRANSACTION } from "../utils/messageType";
-import Modal from "./Modal";
+import { TRANSACTION } from "../../utils/messageType";
+import Modal from "../Modal";
 import {
   FaArrowCircleLeft,
   FaEthereum,
@@ -17,13 +16,12 @@ import {
   FaUser,
 } from "react-icons/fa";
 import Tooltip from "@material-ui/core/Tooltip";
-import DecoratedButton from "../patterns/DecoratedButton";
+import DecoratedButton from "../../shared-components/DecoratedButton";
 
 export default function Chat() {
   const { id } = useParams();
   const { loadMessages, sendMessage } = useContext(ChatContext);
   const { token } = useContext(AuthenticationContext);
-  const { sendTransaction } = useContext(TransactionContext);
   const { acceptTenant, makePayment, removeTenant, connectedAccount } =
     useContext(PropertyHandlingContext);
 
@@ -35,14 +33,13 @@ export default function Chat() {
   const { state } = useLocation();
 
   useEffect(async () => {
-    setResponse(await loadMessages(id));
-
+    const data = await loadMessages(id);
+    setResponse(data);
     if (token) {
       const userId = decodeToken(token);
-      setUserId(userId._id);
+      setUserId(userId._id.toString());
     }
   }, []);
-  console.log(response);
 
   return (
     <>

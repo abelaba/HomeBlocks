@@ -1,9 +1,9 @@
-import { TransactionContext } from "../context/TransactionContext";
+import { PropertyHandlingContext } from "../context/PropertyHandlingContext";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../context/AuthenticationContext";
 
 export default function SignUp() {
-  const { connectedAccount } = useContext(TransactionContext);
+  const { connectedAccount } = useContext(PropertyHandlingContext);
   const { register } = useContext(AuthenticationContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,11 +13,6 @@ export default function SignUp() {
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full space-y-8">
         <div>
-          <img
-            class="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-          />
           <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
             Sign up for an account
           </h2>

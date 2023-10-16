@@ -1,11 +1,11 @@
 import { useEffect, useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChatContext } from "../context/ChatContext";
-import { AuthenticationContext } from "../context/AuthenticationContext";
+import { ChatContext } from "../../context/ChatContext";
+import { AuthenticationContext } from "../../context/AuthenticationContext";
 import "./css/chats.css";
 import { decodeToken } from "react-jwt";
 import { FaUser } from "react-icons/fa";
-import { TRANSACTION } from "../utils/messageType";
+import { TRANSACTION } from "../../utils/messageType";
 import { BiChat } from "react-icons/bi";
 export default function Chats() {
   const { token } = useContext(AuthenticationContext);

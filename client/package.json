@@ -1,5 +1,5 @@
 {
-  "name": "HomeBlocks",
+  "name": "@homeblocks/client",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
@@ -18,6 +18,7 @@
     "autoprefixer": "^10.4.0",
     "axios": "^0.24.0",
     "crypto-js": "^4.1.1",
+    "dotenv": "^16.3.1",
     "eth-revert-reason": "^1.0.3",
     "ethers": "^5.5.1",
     "framer-motion": "^5.3.1",

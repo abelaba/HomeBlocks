@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState, useContext } from "react";
-import { PORT } from "../utils/constants";
+import { chatURL, rentingURL } from "../utils/constants";
 import { AuthenticationContext } from "./AuthenticationContext";
 import { ethers } from "ethers";
 import { TRANSACTION } from "../utils/messageType";
@@ -8,8 +8,11 @@ import { decodeToken } from "react-jwt";
 import sha256 from "crypto-js/sha256";
 import Base64 from "crypto-js/enc-base64";
 import hmacSHA512 from "crypto-js/hmac-sha512";
-import moment from "moment";
-import { getEthereumContract, getNextMonthDate } from "./helperFunctions";
+import {
+  getEthereumContract,
+  getNextMonthDate,
+} from "../utils/helperFunctions";
+import { useNavigate } from "react-router-dom";
 
 export const PropertyHandlingContext = React.createContext();
 const { ethereum } = window;
@@ -18,9 +21,9 @@ export const PropertyHandlingProvider = ({ children }) => {
   const [connectedAccount, setConnectedAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const URL = `http://localhost:${PORT}/api/rental`;
+  const navigateTo = useNavigate();
 
-  const { token, getUser } = useContext(AuthenticationContext);
+  const { token } = useContext(AuthenticationContext);
 
   const config = {
     headers: {
@@ -31,11 +34,14 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const checkIfWalletIsConnected = async () => {
     try {
-      if (!ethereum) return alert("Please connect metamask");
+      if (!window.ethereum) return alert("Please connect metamask");
 
-      const accounts = await ethereum.request({ method: "eth_accounts" });
+      const accounts = await window.ethereum.request({
+        method: "eth_accounts",
+      });
+      console.log("Accounts:", accounts);
 
-      if (accounts.length) {
+      if (accounts.length > 0) {
         setConnectedAccount(accounts[0]);
       } else {
         alert("Please log in to MetaMask");
@@ -43,7 +49,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
-      throw new Error("No ethereum account");
+      throw new Error("Error while trying to connect to ethereum account");
     }
   };
 
@@ -82,14 +88,7 @@ export const PropertyHandlingProvider = ({ children }) => {
     const userId = decodeToken(token);
     const propertyContract = await getEthereumContract();
     const propertyId = await propertyContract.propertyCount();
-    console.log(
-      userId._id,
-      name,
-      description,
-      address,
-      price,
-      propertyOwnershipHash
-    );
+
     const addPropertyToBlockChain = await propertyContract.addProperty(
       userId._id,
       name,
@@ -116,7 +115,7 @@ export const PropertyHandlingProvider = ({ children }) => {
 
     try {
       const response = await axios.post(`${URL}/add`, formData, config);
-      console.log(response);
+      navigateTo("/manageProperties");
     } catch (error) {
       console.log(error.response);
       alert(error.response.data);
@@ -130,23 +129,20 @@ export const PropertyHandlingProvider = ({ children }) => {
       const count = await propertyContract.propertyCount();
       for (let i = 0; i < parseInt(count._hex); i++) {
         const property = await propertyContract.properties(i);
-        const response = await axios.get(`${URL}/getImage/${i}`);
-        console.log(response);
-        const timestamp = parseInt(property.timestamp._hex) * 1000;
-        console.log(response);
+        const response = await axios.get(`${rentingURL}/getImage/${i}`);
         const structuredProperty = {
           owner: property.owner,
-          userId: property.userId,
-          name: property.name,
-          description: property.description,
-          address: response.data[0].address,
-          price: parseInt(property.price._hex),
           propertyCount: parseInt(property.propertyCount._hex),
-          propertyOwnershipHash: property.propertyOwnershipHash,
-          available: response.data[0].available,
-          timestamp: new Date(timestamp).toLocaleString(),
-          rentalImage: response.data[0].rentalImage,
           tenant: property.tenant,
+          userId: response.data[0].userId,
+          name: response.data[0].name,
+          description: response.data[0].description,
+          address: response.data[0].address,
+          price: response.data[0].price,
+          propertyOwnershipHash: response.propertyOwnershipHash,
+          available: response.data[0].available,
+          timestamp: new Date(response.data[0].date).toLocaleString(),
+          rentalImage: response.data[0].rentalImage,
           numBedrooms: response.data[0].numBedrooms,
           numBathrooms: response.data[0].numBathrooms,
           totalArea: response.data[0].totalArea,
@@ -170,9 +166,8 @@ export const PropertyHandlingProvider = ({ children }) => {
       const count = await propertyContract.propertyCount();
       for (let i = 0; i < parseInt(count._hex); i++) {
         const property = await propertyContract.properties(i);
-        console.log(property);
-        if (parseInt(property.owner) == parseInt(connectedAccount)) {
-          const response = await axios.get(`${URL}/getImage/${i}`);
+        if (property.owner.toLowerCase() == connectedAccount.toLowerCase()) {
+          const response = await axios.get(`${rentingURL}/getImage/${i}`);
           const timestamp = parseInt(property.timestamp._hex) * 1000;
           const structuredProperty = {
             owner: property.owner,
@@ -198,8 +193,10 @@ export const PropertyHandlingProvider = ({ children }) => {
       }
       return properties;
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error("Error fetching properties:", error);
+      alert(
+        "An error occurred while fetching properties. Please try again later."
+      );
       return [];
     }
   };
@@ -208,7 +205,7 @@ export const PropertyHandlingProvider = ({ children }) => {
     try {
       const propertyContract = await getEthereumContract();
       const property = await propertyContract.properties(id);
-      const response = await axios.get(`${URL}/getImage/${id}`);
+      const response = await axios.get(`${rentingURL}/getImage/${id}`);
       const timestamp = parseInt(property.timestamp._hex) * 1000;
       const structuredProperty = {
         owner: property.owner,
@@ -270,7 +267,7 @@ export const PropertyHandlingProvider = ({ children }) => {
   const sendTransaction = async (chatId, message) => {
     try {
       const response = await axios.put(
-        `http://localhost:${PORT}/api/chat/sendMessage`,
+        `${chatURL}/sendMessage`,
         { chatId: chatId, message: message, messageType: TRANSACTION },
         { headers: { "auth-token": token } }
       );
@@ -283,8 +280,6 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const makePayment = async (property, chatId) => {
     try {
-      console.log(property);
-      console.log(chatId);
       if (!ethereum) return alert("Please connect metamask");
 
       const parsedPrice = ethers.utils.parseEther(`${property.price}`);
@@ -292,18 +287,18 @@ export const PropertyHandlingProvider = ({ children }) => {
       console.log(`Owner Account ${property.owner}`);
       console.log(`Owner Account ${property.paymentDate}`);
 
-      // const transactionHash = await ethereum.request({
-      //   method: 'eth_sendTransaction',
-      //   params:[{
-      //       from: connectedAccount,
-      //       to: property.owner,
-      //       gas: "0x5208",
-      //       value: parsedPrice._hex
-      //     }]
-      // });
+      const transactionHash = await ethereum.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: connectedAccount,
+            to: property.owner,
+            gas: "0x5208",
+            value: parsedPrice._hex,
+          },
+        ],
+      });
       const time = getNextMonthDate(new Date(property.paymentDate * 1000));
-      console.log(time);
-      return;
       sendTransaction(chatId, transactionHash);
     } catch (error) {
       console.log(error);
@@ -315,7 +310,6 @@ export const PropertyHandlingProvider = ({ children }) => {
     checkIfWalletIsConnected();
     const provider = new ethers.providers.Web3Provider(ethereum);
     const transaction = await provider.getTransaction(message);
-    console.log(transaction);
     return transaction;
   };
 

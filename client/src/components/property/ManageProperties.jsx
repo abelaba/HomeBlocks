@@ -1,12 +1,14 @@
-import { PropertyHandlingContext } from "../context/PropertyHandlingContext";
+import { PropertyHandlingContext } from "../../context/PropertyHandlingContext";
 import { useState, useEffect, useContext } from "react";
 import PropertyCard from "./PropertyCard";
+import { Link } from "react-router-dom";
+import { BsFillHouseAddFill } from "react-icons/bs";
 
-export default function ViewAllProperties() {
-  const { viewAllProperties } = useContext(PropertyHandlingContext);
+export default function ManageProperties() {
+  const { viewMyProperties } = useContext(PropertyHandlingContext);
   const [properties, setProperties] = useState([]);
   const [searchFilters, setSearchFilters] = useState({
-    maxPrice: Infinity,
+    maxPrice: Number.MAX_SAFE_INTEGER,
     minBedrooms: 0,
     minBathrooms: 0,
     propertyType: "",
@@ -16,12 +18,12 @@ export default function ViewAllProperties() {
   const [filterCollapsed, setFilterCollapsed] = useState(false);
 
   useEffect(async () => {
-    const allProperties = await viewAllProperties();
+    const allProperties = await viewMyProperties();
     setProperties(allProperties);
   }, []);
 
   const toggleFilter = () => {
-    setFilterCollapsed(!filterCollapsed);
+    // setFilterCollapsed(!filterCollapsed);
   };
 
   const filteredProperties = properties.filter((property) => {
@@ -39,9 +41,9 @@ export default function ViewAllProperties() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-6  flex flex-col justify-items-center items-center">
       {!filterCollapsed && (
-        <div className="grid grid-flow-cols grid-cols-7 mb-4">
+        <div className="grid grid-flow-cols grid-cols-8 mb-4 gap-4">
           <div className="grid grid-flow-rows">
             <label htmlFor="maxPrice" className="text-white">
               Max Price
@@ -155,9 +157,20 @@ export default function ViewAllProperties() {
               Search
             </div>
           </div>
+          <Link to="/addProperty">
+            <div className="mt-6 px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none">
+              <div className="grid items-center justify-center">
+                <div className="text-white">
+                  <BsFillHouseAddFill size={20} className="inline" /> Add
+                  property
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         {filteredProperties.length === 0 ? (
           <div className="col-span-full m-20 p-20 text-white font-bold">
             <p>No properties match the filters</p>

@@ -4,7 +4,8 @@ const Footer = () => (
   <div className="w-full flex md:justify-center justify-between items-center flex-col p-4 gradient-bg-footer pt-20">
     <div className="flex justify-center items-center flex-col mt-5">
       <p className="text-white text-sm text-center">
-        Come join us and hear for the unexpected miracle
+        Discover the unexpected magic waiting for you in our home renting
+        application. Join us for a unique and delightful experience!
       </p>
     </div>
 

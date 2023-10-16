@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import mapboxgl from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import { PropertyHandlingContext } from "../context/PropertyHandlingContext";
-import { PORT } from "../utils/constants";
+import { PORT, mapBoxAPI } from "../utils/constants";
 
 export default function MapBox() {
   const mapContainer = useRef(null);
@@ -10,6 +10,7 @@ export default function MapBox() {
   const [lat, setLat] = useState(8.94);
   const [zoom, setZoom] = useState(1);
 
+  mapboxgl.accessToken = mapBoxAPI;
   const { viewAllProperties } = useContext(PropertyHandlingContext);
 
   useEffect(async () => {
