@@ -11,7 +11,6 @@ const NavBarItem = ({ title, classprops }) => (
 );
 
 const Navbar = () => {
-  const [toggleMenu, setToggleMenu] = useState(false);
   const { token, logOut } = useContext(AuthenticationContext);
   const { connectedAccount } = useContext(PropertyHandlingContext);
 
@@ -28,7 +27,7 @@ const Navbar = () => {
 
         {!token && (
           <>
-            <DecoratedLink to="signUp">Signup</DecoratedLink>
+            <DecoratedLink to="signUp">Sign up</DecoratedLink>
             <DecoratedLink to="login">Login</DecoratedLink>
           </>
         )}

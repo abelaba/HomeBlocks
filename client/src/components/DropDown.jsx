@@ -26,9 +26,7 @@ export default function DropDown({logOut,account}) {
               <Menu.Item>
                 {({ active }) => (
                   <button onClick={logOut}
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                    className={`text-gray-900 group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   >
                     {active ? (
                       <FaSignOutAlt
