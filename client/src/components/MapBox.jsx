@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
-import mapboxgl from "mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from "mapbox-gl";
 import { PropertyHandlingContext } from "../context/PropertyHandlingContext";
-import { PORT, mapBoxAPI } from "../utils/constants";
+import { mapBoxAPI } from "../utils/constants";
 
 export default function MapBox() {
   const mapContainer = useRef(null);
@@ -49,13 +49,15 @@ export default function MapBox() {
 
   const popUp = (property) => {
     return `
-            <div className="max-w-xl">
-                <a href=/property/${property.propertyCount}> 
-                    <img src=http://localhost:${PORT}/${property.rentalImage} alt="House" />
-                </a>
-                <p class="font-bold text-base mt-2">Price: ${property.price} ETH</p>  
+      <a href=/property/${property._id}>         
+        <div class="card">
+            <img src=${property.rentalImage} alt="House">
+            <div class="container">
+                <p class="price"> ${property.price} ETH</p>
             </div>
-        `;
+        </div>
+      </a>
+    `;
   };
 
   return (
