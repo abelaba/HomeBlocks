@@ -1,39 +1,34 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { PORT, baseURL } from "../../utils/constants";
-import { shortenAddress } from "../../utils/shortenAddress";
 import { MdLocationPin } from "react-icons/md";
 import moment from "moment";
+import "./css/property_card.css";
+import { FaEthereum } from "react-icons/fa";
 
 export default function PropertyCard({ property }) {
   return (
     <div className="w-96">
-      <Link to={`/property/${property.propertyCount}`}>
-        <div className="rounded overflow-hidden shadow-lg home-detail hover:bg-violet-400">
+      <Link to={`/property/${property._id}`}>
+        <div className="rounded-lg overflow-hidden shadow-lg p-2 text-white propertyCard">
           <img
-            className="h-64 w-full"
-            src={`${baseURL}/${property.rentalImage}`}
+            className="h-64 w-full rounded-lg"
+            src={`${property.rentalImage}`}
             alt="House"
           />
-          <div className="px-6 pt-4">
-            <div className="font-bold mb-1 text-lg">
-              <span className="text-base">{property.price} ETH per month</span>
+          <div className="px-2 pt-3">
+            <div className="font-bold text-2xl">
+              <FaEthereum className="p-0 inline" size={30} /> {property.price}
             </div>
           </div>
-          <div className="px-6 py-2 border-b-2 mx-2">
-            <div className="font-bold text-2xl mb-2">{property.name}</div>
+          <div className="px-2 py-2 border-b-2">
             <p className="text-base">
               <MdLocationPin className="inline" /> {property.address}
             </p>
           </div>
-          <div className="px-6 pt-4 pb-2">
+          <div className="px-2 pt-4 pb-2">
             <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-              {moment(property.timestamp).format("DD-MM-YYYY")}
+              {moment(property.date).format("DD-MM-YYYY")}
             </span>
-            <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-              {shortenAddress(property.owner)}
-            </span>
-
             <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
               Bedrooms: {property.numBedrooms}
             </span>

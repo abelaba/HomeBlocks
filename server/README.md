@@ -18,7 +18,6 @@ The server component of the Home Renting Application serves as the backend infra
 
 - User authentication and authorization.
 - Property listing management.
-- Booking requests handling.
 - Messaging between property owners and tenants.
 
 
@@ -38,12 +37,15 @@ To set up the server locally, follow these steps:
 DB_CONNECT = <MongoDB connection string>
 SECRET_KEY = <Secret key for JWT>
 PORT = <Port number for the server>
+CLOUDINARY_CLOUD_NAME = <Cloudinary cloud name>
+CLOUDINARY_API_KEY = <Cloudinary API key>
+CLOUDINARY_APP_SECRET = <Cloudinary app secret> 
 TEST_DB = <MongoDB connection string for testing>
 ```
 
 ## Usage
 
-1. **Start the Server**: Run `nodemon server.js` to start the server.
+1. **Start the Server**: Run `npm run dev` or `npm start` to start the server.
 
 2. **Interact with the API**: Use API clients like Postman to interact with the server endpoints for user authentication, property management, and booking requests.
 

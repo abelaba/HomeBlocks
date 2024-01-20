@@ -6,7 +6,6 @@ export default function ViewAllProperties() {
   const { viewAllProperties } = useContext(PropertyHandlingContext);
   const [properties, setProperties] = useState([]);
   const [searchFilters, setSearchFilters] = useState({
-    maxPrice: Infinity,
     minBedrooms: 0,
     minBathrooms: 0,
     propertyType: "",
@@ -26,7 +25,6 @@ export default function ViewAllProperties() {
 
   const filteredProperties = properties.filter((property) => {
     return (
-      property.price <= searchFilters.maxPrice &&
       property.numBedrooms >= searchFilters.minBedrooms &&
       property.numBathrooms >= searchFilters.minBathrooms &&
       (searchFilters.propertyType === "" ||
@@ -41,25 +39,7 @@ export default function ViewAllProperties() {
   return (
     <div className="p-6 flex flex-col justify-items-center items-center">
       {!filterCollapsed && (
-        <div className="grid grid-flow-cols grid-cols-7 mb-4 space-x-4">
-          <div className="grid grid-flow-rows">
-            <label htmlFor="maxPrice" className="text-white">
-              Max Price
-            </label>
-            <input
-              id="maxPrice"
-              type="number"
-              placeholder="Max Price"
-              value={searchFilters.maxPrice}
-              onChange={(e) =>
-                setSearchFilters({
-                  ...searchFilters,
-                  maxPrice: +e.target.value,
-                })
-              }
-              className="px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300 text-sm w-36"
-            />
-          </div>
+        <div className="grid grid-flow-cols grid-cols-6 mb-4 space-x-4">
           <div className="grid grid-flow-rows">
             <label htmlFor="minBedrooms" className="text-white mb-1">
               Min Bedrooms

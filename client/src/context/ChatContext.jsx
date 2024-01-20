@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import axios from "axios";
-import { PORT, chatURL } from "../utils/constants";
+import { PORT, chatURL, rentingURL } from "../utils/constants";
 import { MESSAGE } from "../utils/messageType";
 import { AuthenticationContext } from "./AuthenticationContext";
 import { PropertyHandlingContext } from "./PropertyHandlingContext";
@@ -12,26 +12,25 @@ export const ChatProvider = ({ children }) => {
   const navigateTo = useNavigate();
 
   const { token } = useContext(AuthenticationContext);
-  const { connectedAccount, getEthereumContract } = useContext(
-    PropertyHandlingContext
-  );
+  const { getEthereumContract } = useContext(PropertyHandlingContext);
   const config = {
     headers: {
       "auth-token": token,
     },
   };
 
-  const createChat = async (propertyOwnerUserId, propertyIdOnBlockChain) => {
+  const createChat = async (propertyOwnerUserId, propertyId) => {
     try {
       const response = await axios.post(
         `${chatURL}/createChat`,
         {
-          propertyIdOnBlockChain: propertyIdOnBlockChain,
+          propertyId: propertyId,
           user2Id: propertyOwnerUserId,
         },
         config
       );
-      navigateTo(`/chat/${response.data._id}`);
+      console.log(response.data);
+      navigateTo(`/chats`);
       return response.data;
     } catch (error) {
       alert(error.response.data);
@@ -55,34 +54,28 @@ export const ChatProvider = ({ children }) => {
         config
       );
 
+      const response2 = await axios.get(
+        `${rentingURL}/view/${response.data.propertyId}`
+      );
+
       const propertyContract = await getEthereumContract();
-      const property = await propertyContract.properties(
+      const blockChainResponse = await propertyContract.properties(
         response.data.propertyIdOnBlockChain
       );
-      const structuredProperty = {
-        owner: property.owner,
-        userId: property.userId,
-        name: property.name,
-        description: property.description,
-        address: property.propertyAddress,
-        price: parseInt(property.price._hex),
-        propertyCount: parseInt(property.propertyCount),
-        propertyOwnershipHash: property.propertyOwnershipHash,
-        available: property.available,
-        timestamp: new Date(
-          parseInt(property.timestamp._hex) * 1000
-        ).toLocaleString(),
-        tenant: property.tenant,
-        paymentDate: parseInt(property.paymentDate._hex) / 1000,
-        // rentalImage: response.data[0].rentalImage
-      };
+      if (response2.status != 200) {
+        alert("Server Error");
+        return;
+      }
       return {
         data: response.data,
-        property: structuredProperty,
+        property: {
+          ...blockChainResponse,
+          _id: response2.data[0]._id,
+        },
       };
     } catch (error) {
-      alert(error.response.data);
-      console.log(error.response.data);
+      // alert(error.response);
+      console.log(error);
     }
   };
 

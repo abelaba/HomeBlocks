@@ -9,12 +9,31 @@ export const AuthenticationContext = React.createContext();
 export const AuthenticationProvider = ({ children }) => {
   const navigateTo = useNavigate();
 
-  const [token, setToken] = useState(sessionStorage.getItem("token"));
-  const [userId, setUserId] = useState(sessionStorage.getItem("userId"));
+  const [token, setToken] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  const isWalletConnected = async () => {
+    try {
+      if (!window.ethereum) {
+        return false;
+      }
+      const accounts = await ethereum.request({
+        method: "eth_accounts",
+      });
+      return accounts.length > 0;
+    } catch (error) {
+      throw new Error("Error while trying to connect to ethereum account");
+    }
+  };
 
   const register = async (e, name, email, password, etherAccount) => {
     e.preventDefault();
     try {
+      const walletConnected = await isWalletConnected();
+      if (!walletConnected) {
+        alert("Please connect metamask");
+        return;
+      }
       const response = await axios.post(registerURL, {
         name: name,
         email: email,
@@ -31,6 +50,11 @@ export const AuthenticationProvider = ({ children }) => {
   const login = async (e, email, password) => {
     e.preventDefault();
     try {
+      const walletConnected = await isWalletConnected();
+      if (!walletConnected) {
+        alert("Please connect metamask");
+        return;
+      }
       const response = await axios.post(loginURL, {
         email: email,
         password: password,

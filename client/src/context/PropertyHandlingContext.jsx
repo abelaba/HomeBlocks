@@ -19,7 +19,6 @@ const { ethereum } = window;
 
 export const PropertyHandlingProvider = ({ children }) => {
   const [connectedAccount, setConnectedAccount] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigateTo = useNavigate();
 
@@ -34,31 +33,26 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const checkIfWalletIsConnected = async () => {
     try {
-      if (!window.ethereum) return alert("Please connect metamask");
+      if (!ethereum) return alert("Please connect metamask");
 
-      const accounts = await window.ethereum.request({
+      window.ethereum.on("accountsChanged", function (accounts) {
+        setConnectedAccount(accounts[0]);
+      });
+
+      const accounts = await ethereum.request({
         method: "eth_accounts",
       });
-      console.log("Accounts:", accounts);
 
       if (accounts.length > 0) {
         setConnectedAccount(accounts[0]);
       } else {
         alert("Please log in to MetaMask");
-        console.log("No accounts");
       }
     } catch (error) {
       console.log(error);
       throw new Error("Error while trying to connect to ethereum account");
     }
   };
-
-  // Change account address when account is changed on MetaMask
-  if (ethereum) {
-    window.ethereum.on("accountsChanged", function (accounts) {
-      setConnectedAccount(accounts[0]);
-    });
-  }
 
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -124,34 +118,13 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const viewAllProperties = async () => {
     try {
-      var properties = [];
-      const propertyContract = await getEthereumContract();
-      const count = await propertyContract.propertyCount();
-      for (let i = 0; i < parseInt(count._hex); i++) {
-        const property = await propertyContract.properties(i);
-        const response = await axios.get(`${rentingURL}/getImage/${i}`);
-        const structuredProperty = {
-          owner: property.owner,
-          propertyCount: parseInt(property.propertyCount._hex),
-          tenant: property.tenant,
-          userId: response.data[0].userId,
-          name: response.data[0].name,
-          description: response.data[0].description,
-          address: response.data[0].address,
-          price: response.data[0].price,
-          propertyOwnershipHash: response.propertyOwnershipHash,
-          available: response.data[0].available,
-          timestamp: new Date(response.data[0].date).toLocaleString(),
-          rentalImage: response.data[0].rentalImage,
-          numBedrooms: response.data[0].numBedrooms,
-          numBathrooms: response.data[0].numBathrooms,
-          totalArea: response.data[0].totalArea,
-          coordinates: response.data[0].coordinates,
-          propertyType: response.data[0].propertyType,
-        };
-        properties.push(structuredProperty);
+      const response = await axios.get(`${rentingURL}/viewAll`);
+      if (response.status == 200) {
+        return response.data;
+      } else {
+        alert("Error");
+        return;
       }
-      return properties;
     } catch (error) {
       console.log(error.response);
       alert(error.response.data);
@@ -161,69 +134,40 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const viewMyProperties = async () => {
     try {
-      var properties = [];
-      const propertyContract = await getEthereumContract();
-      const count = await propertyContract.propertyCount();
-      for (let i = 0; i < parseInt(count._hex); i++) {
-        const property = await propertyContract.properties(i);
-        if (property.owner.toLowerCase() == connectedAccount.toLowerCase()) {
-          const response = await axios.get(`${rentingURL}/getImage/${i}`);
-          const structuredProperty = {
-            owner: property.owner,
-            propertyCount: parseInt(property.propertyCount._hex),
-            tenant: property.tenant,
-            userId: response.data[0].userId,
-            name: response.data[0].name,
-            propertyOwnershipHash: response.data[0].propertyOwnershipHash,
-            description: response.data[0].description,
-            address: response.data[0].address,
-            price: response.data[0].price,
-            available: response.data[0].available,
-            timestamp: new Date(response.data[0].date).toLocaleString(),
-            rentalImage: response.data[0].rentalImage,
-            numBedrooms: response.data[0].numBedrooms,
-            numBathrooms: response.data[0].numBathrooms,
-            totalArea: response.data[0].totalArea,
-            coordinates: response.data[0].coordinates,
-            propertyType: response.data[0].propertyType,
-          };
-          properties.push(structuredProperty);
-        }
-      }
-      return properties;
-    } catch (error) {
-      console.error("Error fetching properties:", error);
-      alert(
-        "An error occurred while fetching properties. Please try again later."
+      const response = await axios.get(
+        `${rentingURL}/viewMyProperties`,
+        config
       );
-      return [];
+      if (response.status == 200) {
+        return response.data;
+      } else {
+        alert("Error");
+        return;
+      }
+    } catch (error) {
+      console.log(error.response);
+      alert(error.response.data);
+      return;
     }
   };
 
   const viewProperty = async (id) => {
     try {
       const propertyContract = await getEthereumContract();
-      const property = await propertyContract.properties(id);
-      const response = await axios.get(`${rentingURL}/getImage/${id}`);
-      const timestamp = parseInt(property.timestamp._hex) * 1000;
+      const response = await axios.get(`${rentingURL}/view/${id}`);
+      if (response.status != 200) {
+        alert("Server Error");
+        return;
+      }
+
+      const property = await propertyContract.properties(
+        response.data[0].propertyIdOnBlockChain
+      );
+
       const structuredProperty = {
+        ...response.data[0],
         owner: property.owner,
         userId: property.userId,
-        name: response.data[0].name,
-        description: response.data[0].description,
-        address: response.data[0].address,
-        price: parseInt(property.price._hex),
-        propertyCount: parseInt(property.propertyCount),
-        propertyOwnershipHash: property.propertyOwnershipHash,
-        available: response.data[0].available,
-        timestamp: new Date(timestamp).toLocaleString(),
-        rentalImage: response.data[0].rentalImage,
-        tenant: property.tenant,
-        numBedrooms: response.data[0].numBedrooms,
-        numBathrooms: response.data[0].numBathrooms,
-        totalArea: response.data[0].totalArea,
-        coordinates: response.data[0].coordinates,
-        propertyType: response.data[0].propertyType,
       };
 
       return structuredProperty;
@@ -282,9 +226,6 @@ export const PropertyHandlingProvider = ({ children }) => {
       if (!ethereum) return alert("Please connect metamask");
 
       const parsedPrice = ethers.utils.parseEther(`${property.price}`);
-      console.log(`Connected Account ${connectedAccount}`);
-      console.log(`Owner Account ${property.owner}`);
-      console.log(`Owner Account ${property.paymentDate}`);
 
       const transactionHash = await ethereum.request({
         method: "eth_sendTransaction",

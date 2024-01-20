@@ -1,11 +1,9 @@
 import { useContext, useState } from "react";
-import { AuthenticationContext } from "../../context/AuthenticationContext";
 import { PropertyHandlingContext } from "../../context/PropertyHandlingContext";
 import DecoratedButton from "../../shared-components/DecoratedButton";
 
 export default function AddProperty() {
   const { addProperty } = useContext(PropertyHandlingContext);
-  const { token } = useContext(AuthenticationContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
@@ -23,7 +21,6 @@ export default function AddProperty() {
   };
 
   const handleSubmit = (e) => {
-    // Call addProperty function here with all the form values
     addProperty(
       name,
       description,
@@ -51,6 +48,7 @@ export default function AddProperty() {
               onChange={(e) => setName(e.target.value)}
             />
             <TextInput
+              placeholder={"Price"}
               label="Price"
               type="number"
               value={price}
@@ -62,7 +60,7 @@ export default function AddProperty() {
             label="Coordinates (Latitude, Longitude)"
             placeholder="Latitude, Longitude"
             value={coordinates}
-            onChange={(lat, lng) => handleCoordinatesChange(lat, lng)}
+            onChange={handleCoordinatesChange}
           />
           <div className="flex flex-row">
             <TextInput
@@ -172,7 +170,17 @@ function TextAreaInput({ label, placeholder, value, onChange }) {
   );
 }
 
-function CoordinatesInput({ label, placeholder, value, onChange }) {
+function CoordinatesInput({ label, value, onChange }) {
+  // Function to handle changes in latitude input
+  const handleLatChange = (e) => {
+    onChange(parseFloat(e.target.value), value.lng);
+  };
+
+  // Function to handle changes in longitude input
+  const handleLngChange = (e) => {
+    onChange(value.lat, parseFloat(e.target.value));
+  };
+
   return (
     <div className="w-full px-3 mt-5 mb-6 md:mb-0">
       <label
@@ -181,18 +189,26 @@ function CoordinatesInput({ label, placeholder, value, onChange }) {
       >
         {label}
       </label>
-      <input
-        required
-        onChange={(e) => {
-          const [lat, lng] = e.target.value.split(",");
-          onChange(parseFloat(lat), parseFloat(lng));
-        }}
-        value={`${value.lat},${value.lng}`}
-        className="appearance-none block w-full bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-        id={label.toLowerCase().replace(" ", "-")}
-        type="text"
-        placeholder={placeholder}
-      />
+      <div className="flex space-x-2">
+        <input
+          required
+          onChange={handleLatChange}
+          value={value.lat}
+          className="appearance-none block w-1/2 bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          type="number"
+          step="any"
+          placeholder="Latitude"
+        />
+        <input
+          required
+          onChange={handleLngChange}
+          value={value.lng}
+          className="appearance-none block w-1/2 bg-gray-200 text-black border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          type="number"
+          step="any"
+          placeholder="Longitude"
+        />
+      </div>
     </div>
   );
 }
@@ -209,7 +225,7 @@ function ImageUploader({ label, value, onChange }) {
               : "https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"
           }
           alt="Uploaded"
-          className="max-h-64 w-full"
+          className="max-h-64 w-full  rounded"
         />
       </div>
 
