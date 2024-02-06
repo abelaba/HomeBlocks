@@ -13,6 +13,7 @@ import {
   getNextMonthDate,
 } from "../utils/helperFunctions";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const PropertyHandlingContext = React.createContext();
 const { ethereum } = window;
@@ -33,7 +34,7 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const checkIfWalletIsConnected = async () => {
     try {
-      if (!ethereum) return alert("Please connect metamask");
+      if (!ethereum) return toast("Please connect metamask");
 
       window.ethereum.on("accountsChanged", function (accounts) {
         setConnectedAccount(accounts[0]);
@@ -46,7 +47,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       if (accounts.length > 0) {
         setConnectedAccount(accounts[0]);
       } else {
-        alert("Please log in to MetaMask");
+        toast("Please log in to MetaMask");
       }
     } catch (error) {
       console.log(error);
@@ -76,7 +77,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       hmacSHA512(hashDigest, connectedAccount)
     );
     if (!token) {
-      alert("You must be logged in");
+      toast("You must be logged in");
       return;
     }
     const userId = decodeToken(token);
@@ -112,7 +113,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       navigateTo("/manageProperties");
     } catch (error) {
       console.log(error.response);
-      alert(error.response.data);
+      toast(error.response.data);
     }
   };
 
@@ -122,12 +123,12 @@ export const PropertyHandlingProvider = ({ children }) => {
       if (response.status == 200) {
         return response.data;
       } else {
-        alert("Error");
+        toast("Error");
         return;
       }
     } catch (error) {
       console.log(error.response);
-      alert(error.response.data);
+      toast(error.response.data);
       return;
     }
   };
@@ -141,12 +142,12 @@ export const PropertyHandlingProvider = ({ children }) => {
       if (response.status == 200) {
         return response.data;
       } else {
-        alert("Error");
+        toast("Error");
         return;
       }
     } catch (error) {
       console.log(error.response);
-      alert(error.response.data);
+      toast(error.response.data);
       return;
     }
   };
@@ -156,7 +157,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       const propertyContract = await getEthereumContract();
       const response = await axios.get(`${rentingURL}/view/${id}`);
       if (response.status != 200) {
-        alert("Server Error");
+        toast("Server Error");
         return;
       }
 
@@ -173,7 +174,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       return structuredProperty;
     } catch (error) {
       console.log(error.response);
-      alert(error.response.data);
+      toast(error.response.data);
       return;
     }
   };
@@ -191,7 +192,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       return property;
     } catch (error) {
       console.log(error);
-      alert(error);
+      toast(error);
       return;
     }
   };
@@ -202,7 +203,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       return property;
     } catch (error) {
       console.log(error.response);
-      alert(error.response.data);
+      toast(error.response.data);
       return;
     }
   };
@@ -216,14 +217,14 @@ export const PropertyHandlingProvider = ({ children }) => {
       );
       return response.data;
     } catch (error) {
-      alert(error.response.data);
+      toast(error.response.data);
       console.log(error.response.data);
     }
   };
 
   const makePayment = async (property, chatId) => {
     try {
-      if (!ethereum) return alert("Please connect metamask");
+      if (!ethereum) return toast("Please connect metamask");
 
       const parsedPrice = ethers.utils.parseEther(`${property.price}`);
 

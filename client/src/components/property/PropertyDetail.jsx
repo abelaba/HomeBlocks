@@ -36,7 +36,7 @@ export default function PropertyDetail() {
   return (
     <div>
       {property && (
-        <div className="p-5">
+        <div className="p-5 property">
           {userId && userId !== property.userId && (
             <button
               onClick={() => createChat(property.userId, property._id)}

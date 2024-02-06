@@ -21,7 +21,7 @@ export default function SignUp() {
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label for="ethAccount" className="sr-only">
+              <label htmlFor="ethAccount" className="sr-only">
                 Ethereum Account
               </label>
               <input
@@ -36,7 +36,7 @@ export default function SignUp() {
               />
             </div>
             <div>
-              <label for="full-name" className="sr-only">
+              <label htmlFor="full-name" className="sr-only">
                 Full Name
               </label>
               <input
@@ -50,7 +50,7 @@ export default function SignUp() {
               />
             </div>
             <div>
-              <label for="email-address" className="sr-only">
+              <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
               <input
@@ -64,7 +64,7 @@ export default function SignUp() {
               />
             </div>
             <div>
-              <label for="password" className="sr-only">
+              <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <input

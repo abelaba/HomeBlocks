@@ -10,3 +10,7 @@
     -ms-transition: background-color 1000ms linear;
     transition: background-color 1000ms linear;
 }
+
+.property{
+    background-color: #222831;
+}

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { loginURL, registerURL } from "../utils/constants";
 import { decodeToken } from "react-jwt";
+import { toast } from 'react-toastify';
 
 export const AuthenticationContext = React.createContext();
 
@@ -31,7 +32,7 @@ export const AuthenticationProvider = ({ children }) => {
     try {
       const walletConnected = await isWalletConnected();
       if (!walletConnected) {
-        alert("Please connect metamask");
+        toast("Please connect metamask");
         return;
       }
       const response = await axios.post(registerURL, {
@@ -42,7 +43,7 @@ export const AuthenticationProvider = ({ children }) => {
       });
       navigateTo("/login");
     } catch (error) {
-      alert(error.response.data);
+      toast(error.response.data);
       console.log(error.response.data);
     }
   };
@@ -52,7 +53,7 @@ export const AuthenticationProvider = ({ children }) => {
     try {
       const walletConnected = await isWalletConnected();
       if (!walletConnected) {
-        alert("Please connect metamask");
+        toast("Please connect metamask");
         return;
       }
       const response = await axios.post(loginURL, {
@@ -68,7 +69,7 @@ export const AuthenticationProvider = ({ children }) => {
 
       navigateTo("/");
     } catch (error) {
-      alert(error.response.data);
+      toast(error.response.data);
       console.log(error.response.data);
     }
   };

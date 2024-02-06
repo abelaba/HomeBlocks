@@ -5,6 +5,7 @@ import { MESSAGE } from "../utils/messageType";
 import { AuthenticationContext } from "./AuthenticationContext";
 import { PropertyHandlingContext } from "./PropertyHandlingContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const ChatContext = React.createContext();
 
@@ -33,7 +34,7 @@ export const ChatProvider = ({ children }) => {
       navigateTo(`/chats`);
       return response.data;
     } catch (error) {
-      alert(error.response.data);
+      toast(error.response.data);
       console.log(error.response.data);
     }
   };
@@ -43,7 +44,7 @@ export const ChatProvider = ({ children }) => {
       const response = await axios.get(`${chatURL}/loadChats`, config);
       return response.data;
     } catch (error) {
-      alert(error.response.data);
+      toast(error.response.data);
       console.log(error.response.data);
     }
   };
@@ -63,7 +64,7 @@ export const ChatProvider = ({ children }) => {
         response.data.propertyIdOnBlockChain
       );
       if (response2.status != 200) {
-        alert("Server Error");
+        toast("Server Error");
         return;
       }
       return {
@@ -74,7 +75,7 @@ export const ChatProvider = ({ children }) => {
         },
       };
     } catch (error) {
-      // alert(error.response);
+      toast(error.response);
       console.log(error);
     }
   };
@@ -88,7 +89,7 @@ export const ChatProvider = ({ children }) => {
       );
       return response.data;
     } catch (error) {
-      alert(error.response.data);
+      toast(error.response.data);
       console.log(error.response.data);
     }
   };

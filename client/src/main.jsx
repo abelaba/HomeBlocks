@@ -7,12 +7,16 @@ import { PropertyHandlingProvider } from "./context/PropertyHandlingContext";
 
 import "./index.css";
 import { ChatProvider } from "./context/ChatContext";
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 ReactDOM.render(
   <BrowserRouter>
     <AuthenticationProvider>
       <PropertyHandlingProvider>
         <ChatProvider>
+          <ToastContainer position="bottom-right" theme="dark"/>
           <App />
         </ChatProvider>
       </PropertyHandlingProvider>
