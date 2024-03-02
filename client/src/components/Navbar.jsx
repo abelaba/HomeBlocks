@@ -25,13 +25,13 @@ const Navbar = () => {
         <DecoratedLink to="map">View on map</DecoratedLink>
         <DecoratedLink to="viewProperties">View properties</DecoratedLink>
 
-        {!token && (
+        {!token() && (
           <>
             <DecoratedLink to="signUp">Sign up</DecoratedLink>
             <DecoratedLink to="login">Login</DecoratedLink>
           </>
         )}
-        {token && (
+        {token() && (
           <>
             <DecoratedLink to="chats">Chats</DecoratedLink>
             <DecoratedLink to="manageProperties">

@@ -35,8 +35,8 @@ export default function Chat() {
   useEffect(async () => {
     const data = await loadMessages(id);
     setResponse(data);
-    if (token) {
-      const userId = decodeToken(token);
+    if (token()) {
+      const userId = decodeToken(token());
       setUserId(userId._id.toString());
     }
   }, []);
@@ -57,7 +57,7 @@ export default function Chat() {
                     <span className="text-gray-700 mr-3">
                       {state.user[0].name}
                     </span>
-                    <span className="text-green-500">
+                    {/* <span className="text-green-500">
                       <svg width="10" height="10">
                         <circle
                           cx="5"
@@ -66,7 +66,7 @@ export default function Chat() {
                           fill="currentColor"
                         ></circle>
                       </svg>
-                    </span>
+                    </span> */}
                   </div>
                   <span className="text-lg text-gray-600">
                     {state.user[0].email}

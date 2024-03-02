@@ -16,7 +16,7 @@ export const ChatProvider = ({ children }) => {
   const { getEthereumContract } = useContext(PropertyHandlingContext);
   const config = {
     headers: {
-      "auth-token": token,
+      "auth-token": token(),
     },
   };
 

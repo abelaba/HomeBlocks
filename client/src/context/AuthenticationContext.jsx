@@ -10,8 +10,8 @@ export const AuthenticationContext = React.createContext();
 export const AuthenticationProvider = ({ children }) => {
   const navigateTo = useNavigate();
 
-  const [token, setToken] = useState(null);
-  const [userId, setUserId] = useState(null);
+  const token = () => sessionStorage.getItem("token");
+  const userId = () => sessionStorage.getItem("userId");
 
   const isWalletConnected = async () => {
     try {
@@ -62,10 +62,8 @@ export const AuthenticationProvider = ({ children }) => {
       });
 
       sessionStorage.setItem("token", response.data);
-      setToken(sessionStorage.getItem("token"));
       const userId = decodeToken(response.data);
       sessionStorage.setItem("userId", userId._id);
-      setUserId(sessionStorage.getItem("token"));
 
       navigateTo("/");
     } catch (error) {
@@ -75,7 +73,6 @@ export const AuthenticationProvider = ({ children }) => {
   };
   const logOut = () => {
     sessionStorage.clear();
-    setToken(sessionStorage.getItem("token"));
     navigateTo("/login");
   };
 

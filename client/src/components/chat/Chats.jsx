@@ -19,8 +19,8 @@ export default function Chats() {
 
   useEffect(async () => {
     setChats(await loadChats());
-    if (token) {
-      const userId = decodeToken(token);
+    if (token()) {
+      const userId = decodeToken(token());
       setUserId(userId._id);
     }
   }, [loadChats, userId]);

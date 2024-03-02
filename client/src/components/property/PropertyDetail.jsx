@@ -27,8 +27,8 @@ export default function PropertyDetail() {
   useEffect(async () => {
     setProperty(await viewProperty(id));
 
-    if (token) {
-      const userId = decodeToken(token);
+    if (token()) {
+      const userId = decodeToken(token());
       setUserId(userId._id);
     }
   }, []);

@@ -27,7 +27,7 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const config = {
     headers: {
-      "auth-token": token,
+      "auth-token": token(),
       "Content-Type": "multipart/form-data",
     },
   };
@@ -76,11 +76,11 @@ export const PropertyHandlingProvider = ({ children }) => {
     const propertyOwnershipHash = Base64.stringify(
       hmacSHA512(hashDigest, connectedAccount)
     );
-    if (!token) {
+    if (!token()) {
       toast("You must be logged in");
       return;
     }
-    const userId = decodeToken(token);
+    const userId = decodeToken(token());
     const propertyContract = await getEthereumContract();
     const propertyId = await propertyContract.propertyCount();
 
@@ -213,7 +213,7 @@ export const PropertyHandlingProvider = ({ children }) => {
       const response = await axios.put(
         `${chatURL}/sendMessage`,
         { chatId: chatId, message: message, messageType: TRANSACTION },
-        { headers: { "auth-token": token } }
+        { headers: { "auth-token": token() } }
       );
       return response.data;
     } catch (error) {
