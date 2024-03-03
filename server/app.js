@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
+const router = require("express").Router();
 app.use(express.json());
 app.use(cors());
 app.use("/uploads/", express.static("uploads"));
@@ -14,5 +14,10 @@ const chatRoute = require("./routes/chat.js");
 app.use("/api/user", authRoute);
 app.use("/api/rental", rentingRoute);
 app.use("/api/chat", chatRoute);
+
+// Status check
+app.get('/status', (req, res) => {
+  res.status(200).send({ message: "Server running" });
+});
 
 module.exports = app;
