@@ -37,7 +37,7 @@ export default function PropertyDetail() {
     <div>
       {property && (
         <div className="p-5 property">
-          {userId && userId !== property.userId && (
+          {userId && userId !== property.userId && parseInt(property.tenant) == 0 && (
             <button
               onClick={() => createChat(property.userId, property._id)}
               className="chatButton"
