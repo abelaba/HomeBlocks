@@ -169,6 +169,7 @@ export const PropertyHandlingProvider = ({ children }) => {
         ...response.data[0],
         owner: property.owner,
         userId: property.userId,
+        tenant: property.tenant,
       };
 
       return structuredProperty;
@@ -181,6 +182,7 @@ export const PropertyHandlingProvider = ({ children }) => {
 
   const acceptTenant = async (tenantAccount, propertyId) => {
     const time = getNextMonthDate(new Date().getTime());
+    const toastId = toast("Adding tenant...", { autoClose: false });
 
     try {
       const propertyContract = await getEthereumContract();
@@ -189,20 +191,26 @@ export const PropertyHandlingProvider = ({ children }) => {
         tenantAccount,
         time.format("X")
       );
-      return property;
+      toast.dismiss(toastId);
+      toast("Tenant added successfully, it may take sometime to add changes to the blockchain");
     } catch (error) {
+      toast.dismiss(toastId);
       console.log(error);
       toast(error);
       return;
     }
   };
   const removeTenant = async (propertyId) => {
+    const toastId = toast("Removing tenant...", { autoClose: false });
     try {
       const propertyContract = await getEthereumContract();
       const property = await propertyContract.removeTenant(propertyId);
+      toast.dismiss(toastId);
+      toast("Tenant removed successfully, it may take sometime to add changes to the blockchain");
       return property;
     } catch (error) {
       console.log(error.response);
+      toast.dismiss(toastId);
       toast(error.response.data);
       return;
     }
