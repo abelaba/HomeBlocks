@@ -8,6 +8,7 @@ const verify = require("../verifyToken");
 
 router.post("/createChat", verify, async (req, res) => {
   try {
+    // * Check if property and users exist
     const rental = await Rental.findById(req.body.propertyId);
     if (!rental) return res.status(404).send("Rental not Found");
     const user1 = await User.findOne({ _id: req.user._id });
@@ -15,7 +16,18 @@ router.post("/createChat", verify, async (req, res) => {
 
     const user2 = await User.findOne({ _id: req.body.user2Id });
     if (!user2) return res.status(404).send("User not Found");
-    // * Create a new user
+    
+    // * Check if chatroom already exists
+    const existingChatroom = await Chatroom.findOne({
+      propertyId: rental._id,
+      propertyIdOnBlockChain: rental.propertyIdOnBlockChain,
+      users: { $all: [user1, user2] },
+    });
+    if (existingChatroom) {
+      return res.status(200).send({chatRoom: existingChatroom._id});
+    }
+    
+    // * Create a new chatroom
     const chatRoom = new Chatroom({
       propertyId: rental._id,
       propertyIdOnBlockChain: rental.propertyIdOnBlockChain,

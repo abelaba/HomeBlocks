@@ -3,7 +3,9 @@ import axios from "axios";
 import { PORT, chatURL, rentingURL } from "../utils/constants";
 import { MESSAGE } from "../utils/messageType";
 import { AuthenticationContext } from "./AuthenticationContext";
-import { PropertyHandlingContext } from "./PropertyHandlingContext";
+import {
+  getEthereumContract,
+} from "../utils/helperFunctions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -13,7 +15,6 @@ export const ChatProvider = ({ children }) => {
   const navigateTo = useNavigate();
 
   const { token } = useContext(AuthenticationContext);
-  const { getEthereumContract } = useContext(PropertyHandlingContext);
   const config = {
     headers: {
       "auth-token": token(),
