@@ -1,16 +1,18 @@
+import React from "react";
 import { NavLink } from "react-router-dom";
 
 export default function DecoratedLink({ to, children }) {
   return (
     <NavLink
       to={to}
-      className={({ isActive }) =>
-        isActive
-          ? "py-2 px-7 mx-4 rounded-full cursor-pointer bg-[#2546bd]  hover:bg-[#2546bd]"
-          : "py-2 px-7 mx-4 rounded-full cursor-pointer  hover:bg-[#2546bd]  "
-      }
+      className="flex flex-col items-center py-2 px-7 mx-4 cursor-pointer"
     >
-      {children}
+      {({ isActive }) => (
+        <>
+          {children}
+          <div className={`w-1 h-1 bg-blue-500 rounded-full mt-1 ${isActive ? "block" : "hidden"}`}></div>
+        </>
+      )}
     </NavLink>
   );
 }

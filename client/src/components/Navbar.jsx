@@ -15,7 +15,7 @@ const Navbar = () => {
   const { connectedAccount } = useContext(PropertyHandlingContext);
 
   return (
-    <nav className="w-full flex flex-col md:flex-row md:justify-center md:justify-between md:items-center md:p-4">
+    <nav className="w-full flex flex-col md:flex-row md:justify-center md:justify-between md:items-center md:p-10">
       <div className="md:flex-[0.5] flex-col md:flex-row flex-initial justify-center items-center">
         <Link to="/" className="flex flex-row">
           <p className="text-white text-3xl shadow font-bold ">HOMEBLOCKS</p>
