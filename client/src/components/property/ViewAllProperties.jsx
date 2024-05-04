@@ -1,6 +1,7 @@
 import { PropertyHandlingContext } from "../../context/PropertyHandlingContext";
 import { useState, useEffect, useContext } from "react";
 import PropertyCard from "./PropertyCard";
+import { FaSearch } from "react-icons/fa";
 
 export default function ViewAllProperties() {
   const { viewAllProperties } = useContext(PropertyHandlingContext);
@@ -130,9 +131,10 @@ export default function ViewAllProperties() {
           <div>
             <div
               onClick={toggleFilter}
-              className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
+              className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none text-center cursor-pointer flex flex-row items-center gap-1"
             >
               Search
+              <FaSearch />
             </div>
           </div>
         </div>

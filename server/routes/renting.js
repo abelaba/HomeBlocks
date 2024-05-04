@@ -9,18 +9,8 @@ const cloudinary = require("cloudinary");
 // * FOR HANDLING IMAGE UPLOAD
 const fs = require("fs");
 const path = require("path");
+const uploadFile = require("../uploadFile");
 
-const uploadFile = (file) => {
-  return cloudinary.v2.uploader.upload(
-    file,
-    { resource_type: "auto" },
-    (error, result) => {
-      if (error) {
-        throw new Error(error.message);
-      }
-    }
-  );
-};
 
 // * ADD RENTAL PROPERTY
 router.post("/add", verify, async (req, res) => {
@@ -74,14 +64,22 @@ router.post("/add", verify, async (req, res) => {
 
 // * VIEW ALL RENTAL PROPERTIES
 router.get("/viewAll", async (req, res) => {
-  const query = await Rental.find();
-  return res.send(query);
+  try {
+    const query = await Rental.find();
+    return res.send(query);
+  } catch (err){
+    return res.status(400).send(err);
+  } 
 });
 
 // * VIEW LOGGED IN USER RENTAL PROPERTIES
 router.get("/viewMyProperties", verify, async (req, res) => {
-  const query = await Rental.find({ userId: req.user._id });
-  return res.send(query);
+  try{
+    const query = await Rental.find({ userId: req.user._id });
+    return res.send(query).status(200);
+  } catch (err){
+    return res.status(400).send(err);
+  }
 });
 
 // * VIEW SINGLE RENTAL PROPERTY BY ID
