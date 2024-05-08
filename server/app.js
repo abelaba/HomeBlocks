@@ -1,23 +1,23 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const cors = require("cors");
-const router = require("express").Router();
+const cors = require('cors');
+
 app.use(express.json());
 app.use(cors());
-app.use("/uploads/", express.static("uploads"));
+app.use('/uploads/', express.static('uploads'));
 
 // * IMPORT ROUTES
-const authRoute = require("./routes/auth");
-const rentingRoute = require("./routes/renting");
-const chatRoute = require("./routes/chat.js");
+const authRoute = require('./routes/auth');
+const rentingRoute = require('./routes/renting');
+const chatRoute = require('./routes/chat.js');
 
-app.use("/api/user", authRoute);
-app.use("/api/rental", rentingRoute);
-app.use("/api/chat", chatRoute);
+app.use('/api/user', authRoute);
+app.use('/api/rental', rentingRoute);
+app.use('/api/chat', chatRoute);
 
 // Status check
 app.get('/status', (req, res) => {
-  res.status(200).send({ message: "Server running" });
+  res.status(200).send({ message: 'Server running' });
 });
 
 module.exports = app;

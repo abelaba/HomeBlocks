@@ -1,19 +1,15 @@
-const router = require("express").Router();
-const Rental = require("../model/Rental");
-const { User } = require("../model/User");
-const { rentalValidation } = require("../validation");
-const verify = require("../verifyToken");
-const formidable = require("formidable");
-const cloudinary = require("cloudinary");
+const router = require('express').Router();
+const Rental = require('../model/Rental');
+const { rentalValidation } = require('../validation');
+const verify = require('../verifyToken');
+const formidable = require('formidable');
 
 // * FOR HANDLING IMAGE UPLOAD
-const fs = require("fs");
-const path = require("path");
-const uploadFile = require("../uploadFile");
-
+const fs = require('fs');
+const uploadFile = require('../uploadFile');
 
 // * ADD RENTAL PROPERTY
-router.post("/add", verify, async (req, res) => {
+router.post('/add', verify, async (req, res) => {
   try {
     const form = formidable.IncomingForm();
     // console.log(form);
@@ -21,7 +17,7 @@ router.post("/add", verify, async (req, res) => {
     form.maxFileSize = 50 * 1024 * 1024; // 5MB
     form.parse(req, async (err, fields, files) => {
       if (err) {
-        throw new Error("Error parsing the files");
+        throw new Error('Error parsing the files');
       }
       const { error } = rentalValidation({ ...fields, ...files });
       if (error) {
@@ -63,67 +59,72 @@ router.post("/add", verify, async (req, res) => {
 });
 
 // * VIEW ALL RENTAL PROPERTIES
-router.get("/viewAll", async (req, res) => {
+router.get('/viewAll', async (req, res) => {
   try {
     const query = await Rental.find();
     return res.send(query);
-  } catch (err){
+  } catch (err) {
     return res.status(400).send(err);
-  } 
+  }
 });
 
 // * VIEW LOGGED IN USER RENTAL PROPERTIES
-router.get("/viewMyProperties", verify, async (req, res) => {
-  try{
+router.get('/viewMyProperties', verify, async (req, res) => {
+  try {
     const query = await Rental.find({ userId: req.user._id });
     return res.send(query).status(200);
-  } catch (err){
+  } catch (err) {
     return res.status(400).send(err);
   }
 });
 
 // * VIEW SINGLE RENTAL PROPERTY BY ID
-router.get("/view/:id", async (req, res) => {
+router.get('/view/:id', async (req, res) => {
   try {
     // * CHECK IF ID PARAMETER IS CORRECT
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/))
-      return res.status(400).send("Invalid ID");
+    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).send('Invalid ID');
+    }
 
     const query = await Rental.find({ _id: req.params.id });
-    if (query.length != 0) return res.send(query);
-    else return res.status(404).send("Property not found.");
+    if (query.length !== 0) {
+      return res.send(query);
+    } else {
+      return res.status(404).send('Property not found.');
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
 // * DELETE RENTAL PROPERTY
-router.delete("/delete/:id", verify, async (req, res) => {
-
+router.delete('/delete/:id', verify, async (req, res) => {
   // * CHECK IF ID PARAMETER IS CORRECT
-  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/))
-    return res.status(400).send("Invalid ID");
+  if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(400).send('Invalid ID');
+  }
 
-  var query = await Rental.findByIdAndDelete(req.params.id);
-  if (!query) return res.status(404).send("Property not found");
+  const query = await Rental.findByIdAndDelete(req.params.id);
+  if (!query) {
+    return res.status(404).send('Property not found');
+  }
   fs.unlink(query.rentalImage, (err) => {
-    if (err) throw err;
-    console.log("File deleted " + query.rentalImage);
+    if (err) {
+      throw err;
+    }
   });
-  res.status(204).send("Deleted property");
+  res.status(204).send('Deleted property');
 });
 
-router.put("/addTenant", verify, async (req, res) => {
-  console.log("Add tenant");
+router.put('/addTenant', verify, async (req, res) => {
   const rental = { tenant: req.body.tenant, available: false };
-  var query = await Rental.findByIdAndUpdate(req.body.rentalId, rental);
+  const query = await Rental.findByIdAndUpdate(req.body.rentalId, rental);
   res.status(201).send(query);
 });
 
-router.put("/removeTenant", verify, async (req, res) => {
-  console.log("Remove tenant");
+router.put('/removeTenant', verify, async (req, res) => {
   const rental = { tenant: undefined, available: true };
-  var query = await Rental.findByIdAndUpdate(req.body.rentalId, rental);
+  const query = await Rental.findByIdAndUpdate(req.body.rentalId, rental);
   res.status(201).send(query);
 });
 

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --detectOpenHandles",
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,9 @@
     "nodemon": "^2.0.12"
   },
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "eslint": "^9.8.0",
+    "globals": "^15.9.0",
     "jest": "^29.7.0",
     "supertest": "^6.3.4"
   }

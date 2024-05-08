@@ -1,8 +1,8 @@
-const app = require("./app");
-const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, ".env") });
-const mongoose = require("mongoose");
-const cloudinary = require("cloudinary");
+const app = require('./app');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+const mongoose = require('mongoose');
+const cloudinary = require('cloudinary');
 
 const main = () => {
   const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
@@ -25,10 +25,10 @@ const main = () => {
         useCreateIndex: true,
       })
       .then(() => {
-        console.log("*** DATABASE HAS CONNECTED SUCCESSFULLY");
+        console.log('*** DATABASE HAS CONNECTED SUCCESSFULLY');
       })
       .catch((error) => {
-        console.log("Error connecting to database:", error.message);
+        console.log('Error connecting to database:', error.message);
         process.exit(1);
       });
 

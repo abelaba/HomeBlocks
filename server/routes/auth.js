@@ -1,26 +1,22 @@
-const router = require("express").Router();
-const { User } = require("../model/User");
-const { registervalidation, loginValidation } = require("../validation");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const verify = require("../verifyToken");
+const router = require('express').Router();
+const { User } = require('../model/User');
+const { registervalidation, loginValidation } = require('../validation');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const verify = require('../verifyToken');
 
 // * REGISTER
-router.post("/register", async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     // *LETS VALIDATE THE DATA
     const { error } = registervalidation(req.body);
     if (error) {
-      console.log("Signup validation error");
       return res.status(400).send(error.details[0].message);
     }
 
     // * CHECK IF EMAIL EXISTS
     const emailExist = await User.findOne({ email: req.body.email });
-    if (emailExist) return res.status(400).send("Email already exists");
-
-    // const etherAccountExist = await User.findOne({ etherAccount: req.body.etherAccount });
-    // if (etherAccountExist) return res.status(400).send("EtherAccount already exists");
+    if (emailExist) {return res.status(400).send('Email already exists');}
 
     // * Hash passwords
     const salt = await bcrypt.genSalt(10);
@@ -33,51 +29,47 @@ router.post("/register", async (req, res) => {
       password: hashPassword,
       etherAccount: req.body.etherAccount,
     });
-    const savedUser = await user.save();
+    await user.save();
     res.status(201).send({ user: user._id });
-    console.log("Signed Up");
   } catch (err) {
     res.status(400).send(err);
-    console.log(err);
   }
 });
 
 // * LOGIN
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     // * VALIDATE INPUT
     const { error } = loginValidation(req.body);
     if (error) {
-      console.log(`Error ${error}`);
       return res.status(400).send(error.details[0].message);
     }
 
     // * CHECK IF EMAIL EXISTS
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      console.log("Email or password is wrong.");
-      return res.status(400).send("Email or password is wrong.");
+      return res.status(400).send('Email or password is wrong.');
     }
 
     //* CHECK IF PASSWORD IS CORRECT
     const validPassword = await bcrypt.compare(
       req.body.password,
-      user.password
+      user.password,
     );
     if (!validPassword) {
-      return res.status(400).send("Email or password is wrong.");
+      return res.status(400).send('Email or password is wrong.');
     }
 
     // * CREATE AND ASSIGN TOKEN
     const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
-    return res.header("auth-token", token).send(token);
+    return res.header('auth-token', token).send(token);
   } catch (error) {
-    return res.status(500).send("Server error");
+    return res.status(500).send('Server error');
   }
 });
 
 // * UPDATE ACCOUNT
-router.put("/updateAccount", verify, async (req, res) => {
+router.put('/updateAccount', verify, async (req, res) => {
   // *LETS VALIDATE THE DATA
   const user = await User.findOne({ _id: req.user });
   if (user) {
@@ -94,18 +86,18 @@ router.put("/updateAccount", verify, async (req, res) => {
     user.phoneNumber = req.body.phoneNumber;
 
     try {
-      const savedUser = await user.save();
+      await user.save();
       res.send({ user: user._id });
     } catch (err) {
       res.status(400).send(err);
     }
   } else {
-    res.status(404).send("User not found");
+    res.status(404).send('User not found');
   }
 });
 
 // * DELETE ACCOUNT
-router.delete("/deleteAccount", verify, async (req, res) => {
+router.delete('/deleteAccount', verify, async (req, res) => {
   // * LETS VALIDATE THE DATA
   const user = await User.findOne({ _id: req.user });
   if (user) {
@@ -116,7 +108,7 @@ router.delete("/deleteAccount", verify, async (req, res) => {
       res.status(400).send(err);
     }
   } else {
-    res.status(404).send("User not found");
+    res.status(404).send('User not found');
   }
 });
 

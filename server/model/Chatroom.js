@@ -1,19 +1,18 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const { User, userSchema } = require("./User");
+const mongoose = require('mongoose');
+const { userSchema } = require('./User');
 
 const messageSchema = new mongoose.Schema({
   senderId: {
     type: String,
-    required: "senderId is required",
+    required: 'senderId is required',
   },
   message: {
     type: String,
-    required: "Message is required",
+    required: 'Message is required',
   },
   messageType: {
     type: String,
-    enum: ["MESSAGE", "TRANSACTION"],
+    enum: ['MESSAGE', 'TRANSACTION'],
   },
   time: {
     type: Date,
@@ -35,4 +34,4 @@ const chatRoomSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Chatroom", chatRoomSchema);
+module.exports = mongoose.model('Chatroom', chatRoomSchema);
