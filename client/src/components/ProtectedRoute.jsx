@@ -1,16 +1,16 @@
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import React from 'react'
+import { Navigate, useLocation } from 'react-router-dom'
 
 const ProtectedRoute = ({ children }) => {
-  let location = useLocation();
+  let location = useLocation()
 
-  const isAuthenticated = sessionStorage.getItem("token") !== null;
+  const isAuthenticated = sessionStorage.getItem('token') !== null
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to='/login' state={{ from: location }} replace />
   }
 
-  return children;
-};
+  return children
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute

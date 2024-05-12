@@ -1,17 +1,19 @@
+import React from 'react'
+
 export default function DecoratedButton({
   className,
   clickFunction,
-  children,
+  children
 }) {
   const run = (e) => {
-    e.preventDefault();
-    clickFunction();
-  };
+    e.preventDefault()
+    clickFunction()
+  }
 
   return (
     <button className={className} onClick={(e) => run(e)}>
-      {" "}
-      {children}{" "}
+      {' '}
+      {children}{' '}
     </button>
-  );
+  )
 }

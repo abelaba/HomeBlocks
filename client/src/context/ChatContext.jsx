@@ -1,25 +1,23 @@
-import React, { useContext } from "react";
-import axios from "axios";
-import { PORT, chatURL, rentingURL } from "../utils/constants";
-import { MESSAGE } from "../utils/messageType";
-import { AuthenticationContext } from "./AuthenticationContext";
-import {
-  getEthereumContract,
-} from "../utils/helperFunctions";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import React, { useContext } from 'react'
+import axios from 'axios'
+import { chatURL, rentingURL } from '../utils/constants'
+import { MESSAGE } from '../utils/messageType'
+import { AuthenticationContext } from './AuthenticationContext'
+import { getEthereumContract } from '../utils/helperFunctions'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-export const ChatContext = React.createContext();
+export const ChatContext = React.createContext()
 
 export const ChatProvider = ({ children }) => {
-  const navigateTo = useNavigate();
+  const navigateTo = useNavigate()
 
-  const { token } = useContext(AuthenticationContext);
+  const { token } = useContext(AuthenticationContext)
   const config = {
     headers: {
-      "auth-token": token(),
-    },
-  };
+      'auth-token': token()
+    }
+  }
 
   const createChat = async (propertyOwnerUserId, propertyId) => {
     try {
@@ -27,59 +25,59 @@ export const ChatProvider = ({ children }) => {
         `${chatURL}/createChat`,
         {
           propertyId: propertyId,
-          user2Id: propertyOwnerUserId,
+          user2Id: propertyOwnerUserId
         },
         config
-      );
-      console.log(response.data);
-      navigateTo(`/chats`);
-      return response.data;
+      )
+      console.log(response.data)
+      navigateTo(`/chats`)
+      return response.data
     } catch (error) {
-      toast(error.response.data);
-      console.log(error.response.data);
+      toast(error.response.data)
+      console.log(error.response.data)
     }
-  };
+  }
 
   const loadChats = async () => {
     try {
-      const response = await axios.get(`${chatURL}/loadChats`, config);
-      return response.data;
+      const response = await axios.get(`${chatURL}/loadChats`, config)
+      return response.data
     } catch (error) {
-      toast(error.response.data);
-      console.log(error.response.data);
+      toast(error.response.data)
+      console.log(error.response.data)
     }
-  };
+  }
   const loadMessages = async (chatId) => {
     try {
       const response = await axios.get(
         `${chatURL}/loadMessages/${chatId}`,
         config
-      );
+      )
 
       const response2 = await axios.get(
         `${rentingURL}/view/${response.data.propertyId}`
-      );
+      )
 
-      const propertyContract = await getEthereumContract();
+      const propertyContract = await getEthereumContract()
       const blockChainResponse = await propertyContract.properties(
         response.data.propertyIdOnBlockChain
-      );
+      )
       if (response2.status != 200) {
-        toast("Server Error");
-        return;
+        toast('Server Error')
+        return
       }
       return {
         data: response.data,
         property: {
           ...blockChainResponse,
-          _id: response2.data[0]._id,
-        },
-      };
+          _id: response2.data[0]._id
+        }
+      }
     } catch (error) {
-      toast(error.response);
-      console.log(error);
+      toast(error.response)
+      console.log(error)
     }
-  };
+  }
 
   const sendMessage = async (chatId, message) => {
     try {
@@ -87,13 +85,13 @@ export const ChatProvider = ({ children }) => {
         `${chatURL}/sendMessage`,
         { chatId: chatId, message: message, messageType: MESSAGE },
         config
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      toast(error.response.data);
-      console.log(error.response.data);
+      toast(error.response.data)
+      console.log(error.response.data)
     }
-  };
+  }
 
   return (
     <ChatContext.Provider
@@ -101,5 +99,5 @@ export const ChatProvider = ({ children }) => {
     >
       {children}
     </ChatContext.Provider>
-  );
-};
+  )
+}
