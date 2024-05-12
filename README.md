@@ -2,7 +2,7 @@
 
 Welcome to the HomeBlocks repository! This repository contains the codebase for a comprehensive home renting application, comprising client, server, and smart contract components. This application aims to simplify and streamline the process of renting and managing properties.
 
-![alt text](image.png)
+![alt text](HomeBlocks.png)
 
 
 ## Table of Contents
